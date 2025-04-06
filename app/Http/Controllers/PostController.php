@@ -61,7 +61,15 @@ class PostController extends Controller
 
     public function update(Request $request, $id)
     {
-        return $this->postRepository->update($id, $request->all());
+        $updatedPost = $this->postRepository->update($id, $request->all());  
+
+        if ($updatedPost) {  
+            return redirect()->route('posts.index')->with('success', 'Post updated successfully!');  
+        } 
+
+        return back()->with('error', 'Failed to update post.'); 
+         
+        // return $this->postRepository->update($id, $request->all());
 
         // return response()->json($this->postRepository->update($id, $request->all()));
     }

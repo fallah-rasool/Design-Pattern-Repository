@@ -49,8 +49,9 @@
                 </div>
                 @enderror
             </div>
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary"> send</button>
+            <div class="mb-3 d-flex justify-content-between">
+                <a class="py-2 px-2 btn btn-secondary" href="{{ route('posts.index') }}"> صفحه قبلی</a>
+                <button type="submit" class="btn btn-primary py-2 px-2"> send</button>
             </div>
             
     </form>

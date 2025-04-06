@@ -21,13 +21,11 @@ class PostRepository implements PostRepositoryInterface
     }
     public function create(array $data)
     {
-    //    dd( $data['status']);
         return $this->model->create([  
             'title' => $data['title'],  
             'body' => $data['body'],  
-             'status' => isset($data['status']) && $data['status'] === 'on' ? 1 : 0, 
-        ]); 
-       
+            'status' => isset($data['status']) && ($data['status'] === 'on') ? 1 : 0,  
+        ]);        
     }
     public function update($id, array $data)
     {
@@ -35,9 +33,11 @@ class PostRepository implements PostRepositoryInterface
         if ($post) {
             $post->title =  $data['title'];  
             $post->body =  $data['body'];  
-            $post->status =  $data['status'] ? 1 : 0; // تبدیل به 0 یا 1  
+            $post->status =  isset($data['status']) && ($data['status'] === 'on') ? 1 : 0; // تبدیل به 0 یا 1 
+           
             $post->save();
-            return back()->with('success', 'Slider updated successfully!'); 
+            return $post;
+           // return back()->with('success', 'Slider updated successfully!'); 
         }
         return null;
     }
