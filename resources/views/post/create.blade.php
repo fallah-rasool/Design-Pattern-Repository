@@ -42,7 +42,7 @@
             </div>
             <div class="mb-3">
                 <label for="status" class="form-label">status</label>
-                <input class="form-check-input" name="status" type="checkbox" role="switch" id="status" checked>
+                <input class="form-check-input" name="status" type="checkbox" role="switch" id="status" >
                 @error('status')
                 <div class="text-danger mt-2">
                     {{ $message}}
