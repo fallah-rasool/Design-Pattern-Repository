@@ -3,35 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
 use App\Repositories\Contracts\PostRepositoryInterface;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    protected $postRepository;
-    public function __construct(PostRepositoryInterface $postRepository)
-    {
-        $this->postRepository = $postRepository;
-    }
+     /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $posts= $this->postRepository->getAll();         
-        return view('post.index',compact('posts'));
+        $posts = Post::all();
 
-        // return response()->json($this->postRepository->getAll());
+       return view('post.index',compact('posts'));
     }
+
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('post.create');
     }
-    
-    public function show($id)
-    {
-        $post = $this->postRepository->findById($id);        
-        return view('post.show',compact('post'));
 
-      //  return response()->json($this->postRepository->findById($id));
-    }
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -42,43 +39,54 @@ class PostController extends Controller
             // 'status'=>'boolean',
         ]);
 
-    $post=$this->postRepository->create($request->all());
-
-    if($post){   
-        return back()->with('success', 'create post successfully!');              
-   } else {  
-        return back()->with('error', 'No create post.');  
-     }
-
-       // return response()->json($this->postRepository->create($request->all()));
+        $post = Post::create([  
+            'title' => $request->title,  
+            'body' => $request->body,  
+            'status' => $request->status ? 1 : 0, 
+        ]);  
+        if($post){   
+            return back()->with('success', 'create post successfully!');  
+        
+        } else {  
+            return back()->with('error', 'No create post.');  
+         }  
     }
 
-    public function edit($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Post $post)
     {
-        $post = $this->postRepository->findById($id); 
+        return view('post.show',compact('post'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Post $post)
+    {
          return view('post.edit',compact('post'));
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Post $post)
     {
-        $updatedPost = $this->postRepository->update($id, $request->all());  
-
-        if ($updatedPost) {  
-            return redirect()->route('posts.index')->with('success', 'Post updated successfully!');  
-        } 
-
-        return back()->with('error', 'Failed to update post.'); 
-         
-        // return $this->postRepository->update($id, $request->all());
-
-        // return response()->json($this->postRepository->update($id, $request->all()));
+        $post->title =  $request->title;  
+            $post->body =  $request->body;  
+            $post->status =   $request->status ? 1 : 0; // تبدیل به 0 یا 1  
+            $post->save();
+            return back()->with('success', 'Slider updated successfully!'); 
     }
-    public function destroy($id)
-    {
-        $this->postRepository->delete($id); 
-            return back()->with('success', 'delete post successfully!'); 
 
-        // return response()->json($this->postRepository->delete($id));
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Post $post)
+    {
+        $post->delete(); 
+        return back()->with('success', 'delete post successfully!'); 
     }
 
 }
